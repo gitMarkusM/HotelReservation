@@ -72,7 +72,7 @@ public class HuoneDao implements Dao<Huone, Integer> {
 
             if((haluttuAlku.isBefore(alku) && haluttuLoppu.isAfter(alku) && (haluttuLoppu.isBefore(loppu) || haluttuLoppu.isAfter(loppu))) ||
                 (haluttuAlku.isAfter(alku) && haluttuAlku.isBefore(loppu))) {
-                varattujenHuoneidenNrot.add(1/*varausDao.read(i).getHuone_numero()*/);
+//                varattujenHuoneidenNrot.add(varausDao.read(i).getHuone_numero());
             }
         }
         
