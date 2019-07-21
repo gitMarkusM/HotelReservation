@@ -61,18 +61,19 @@ public class HuoneDao implements Dao<Huone, Integer> {
     }
     
     public List<Huone> haeHuoneita(LocalDateTime haluttuAlku, LocalDateTime haluttuLoppu, String haluttuTyyppi, String maxHinta) throws SQLException, Exception {
-        int varaustenLkm = varausDao.list().size();
+        List<Varaus> varaukset = varausDao.list();
+        int varaustenLkm = varaukset.size();
         List<Integer> varattujenHuoneidenNrot = new ArrayList<>();
 
-        for (int i = 1; i <= varaustenLkm; i++) {
+        for (int i = 0; i < varaustenLkm; i++) {
             // Lisätään alkuun 16 ja loppuun 10 tuntia, koska kannasta tullessa tunnit nollilla.
             // Ja yksi minuutti, jotta ei tarvita equals ehtoa ehtolauseeseen
-            LocalDateTime alku = varausDao.read(i).getAlkupvm().plusHours(16).plusMinutes(1);
-            LocalDateTime loppu = varausDao.read(i).getLoppupvm().plusHours(10).plusMinutes(1);
+            LocalDateTime alku = varaukset.get(i).getAlkupvm().plusHours(16).plusMinutes(1);
+            LocalDateTime loppu = varaukset.get(i).getLoppupvm().plusHours(10).plusMinutes(1);
 
             if((haluttuAlku.isBefore(alku) && haluttuLoppu.isAfter(alku) && (haluttuLoppu.isBefore(loppu) || haluttuLoppu.isAfter(loppu))) ||
                 (haluttuAlku.isAfter(alku) && haluttuAlku.isBefore(loppu))) {
-//                varattujenHuoneidenNrot.add(varausDao.read(i).getHuone_numero());
+                varattujenHuoneidenNrot.add(varaukset.get(i).getHuonenro());
             }
         }
         

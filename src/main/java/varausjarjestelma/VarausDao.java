@@ -64,7 +64,9 @@ public class VarausDao implements Dao<Varaus, Integer> {
     @Override
     public List<Varaus> list() throws SQLException {
         List<Varaus> varaukset = jdbcTemplate.query("SELECT id, asiakasid, "
-                + "alkupvm, loppupvm FROM Varaus", (rs, rowNum) ->
+                + "alkupvm, loppupvm, numero FROM Varaus "
+                + "JOIN Huonevaraus ON Huonevaraus.varausid = Varaus.id "
+                + "JOIN Huone ON Huone.numero = Huonevaraus.huonenumero", (rs, rowNum) ->
                 new Varaus(rs));  
         return varaukset;
     }
@@ -99,7 +101,13 @@ public class VarausDao implements Dao<Varaus, Integer> {
         return varaustiedot;
     }
     
-//    public void listaaVaraustiedot() throws SQLException {
+    public Date LocalDateTimeToSqlDate(LocalDateTime ldt) {     
+        LocalDate ld = ldt.toLocalDate();
+        Date date = Date.valueOf(ld);
+        return date;
+    }
+
+    //    public void listaaVaraustiedot() throws SQLException {
 //        List<Varaus> varaukset = list();
 //        List<Asiakas> asiakkaat = asiakasDao.list(); // hashmap?
 //        List<HuoneVaraus> huonevaraukset = huoneVarausDao.list();
@@ -123,10 +131,4 @@ public class VarausDao implements Dao<Varaus, Integer> {
 //        }
 //    }
     
-    public Date LocalDateTimeToSqlDate(LocalDateTime ldt) {     
-        LocalDate ld = ldt.toLocalDate();
-        Date date = Date.valueOf(ld);
-        return date;
-    }
-
 }

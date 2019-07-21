@@ -14,6 +14,7 @@ public class Varaus {
     private LocalDateTime alkupvm;
     private LocalDateTime loppupvm;
     private int asiakasId; //Integer
+    private int huonenro;
 
     public Varaus() {
     }
@@ -29,6 +30,7 @@ public class Varaus {
         this.asiakasId = rs.getInt("asiakasid");
         this.alkupvm = LocalDateTime.parse(rs.getDate("alkupvm") + " " + "16:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.huonenro = rs.getInt("numero");
     }
 
     public int getId() {
@@ -62,24 +64,13 @@ public class Varaus {
     public void setAsiakasId(Integer asiakasId) {
         this.asiakasId = asiakasId;
     }
-    
-//    public int laskeKestoPaivina(LocalDateTime alkupvm, LocalDateTime loppupvm) {
-//        LocalDate ldAlkupvm = alkupvm.toLocalDate();
-//        LocalDate ldLoppupvm = loppupvm.toLocalDate();
-//        int kestoPaivina = 0;
-//        
-//        while(!ldAlkupvm.equals(ldLoppupvm)) {
-//            ldAlkupvm = ldAlkupvm.plusDays(1);
-//            kestoPaivina++;
-//        }
-//        
-//        return kestoPaivina;
-//    }
-//    
-//    @Override
-//    public String toString() {
-//        return alkupvm + ", " + loppupvm + ", " + laskeKestoPaivina(alkupvm, loppupvm) + 
-//                " päivää, 1 huone.";
-//    }
+
+    public int getHuonenro() {
+        return huonenro;
+    }
+
+    public void setHuonenro(int huonenro) {
+        this.huonenro = huonenro;
+    }
     
 }
