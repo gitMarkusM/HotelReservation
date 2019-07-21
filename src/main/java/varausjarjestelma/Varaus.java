@@ -15,6 +15,8 @@ public class Varaus {
     private LocalDateTime loppupvm;
     private int asiakasId; //Integer
     private int huonenro;
+    private Asiakas asiakas;
+    private Huone huone;
 
     public Varaus() {
     }

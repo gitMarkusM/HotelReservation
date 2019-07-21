@@ -106,29 +106,5 @@ public class VarausDao implements Dao<Varaus, Integer> {
         Date date = Date.valueOf(ld);
         return date;
     }
-
-    //    public void listaaVaraustiedot() throws SQLException {
-//        List<Varaus> varaukset = list();
-//        List<Asiakas> asiakkaat = asiakasDao.list(); // hashmap?
-//        List<HuoneVaraus> huonevaraukset = huoneVarausDao.list();
-//        
-//        for (int i = 0; i < varaukset.size(); i++) {
-//            for(Asiakas asiakas: asiakkaat) {
-//                if(asiakas.getId() == varaukset.get(i).getAsiakasId()) {
-//                    System.out.print(asiakas + ", ");
-//                    System.out.println(varaukset.get(i) + " Huoneet:");
-//                    
-//                    for(HuoneVaraus hv: huonevaraukset) {
-//                        if(hv.getVarausId() == varaukset.get(i).getId()) {
-//                            int huoneNro = hv.getHuonenrot();
-//                            Huone huone = huoneDao.read(huoneNro);
-//                            System.out.println(huone);
-//                            System.out.println("Yhteensä: ");
-//                        }
-//                    }   
-//                }
-//            }
-//        }
-//    }
     
 }
