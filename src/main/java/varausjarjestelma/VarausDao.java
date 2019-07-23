@@ -89,14 +89,15 @@ public class VarausDao implements Dao<Varaus, Integer> {
         return id;
     }
     
-    public List<Varaustiedot> listaaVaraustiedot() throws SQLException {
-        List<Varaustiedot> varaustiedot = jdbcTemplate.query("SELECT "
+    public List<Varaus> listaaVaraustiedot() throws SQLException {
+        Boolean b = true;
+        List<Varaus> varaustiedot = jdbcTemplate.query("SELECT "
                 + "Asiakas.nimi, Asiakas.puhelinnro, Asiakas.email, Varaus.alkupvm, "
                 + "Varaus.loppupvm, Huone.numero, Huone.tyyppi, Huone.paivahinta "
                 + "FROM Varaus JOIN Asiakas ON Asiakas.id = Varaus.asiakasid JOIN "
                 + "Huonevaraus ON Huonevaraus.varausid = Varaus.id JOIN Huone ON "
                 + "Huone.numero = Huonevaraus.huonenumero", (rs, rowNum) -> 
-                new Varaustiedot(rs));
+                new Varaus(rs, b));
         
         return varaustiedot;
     }

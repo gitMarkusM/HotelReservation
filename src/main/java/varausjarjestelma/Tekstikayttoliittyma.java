@@ -265,7 +265,7 @@ public class Tekstikayttoliittyma {
         });
     }
     
-    public static void tulostaVaraustiedot(List<Varaustiedot> varaustiedot) {
+    public static void tulostaVaraustiedot(List<Varaus> varaustiedot) {
         System.out.println("******************************************************");
         varaustiedot.forEach(varaustieto -> {
             System.out.println(varaustieto);

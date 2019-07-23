@@ -3,6 +3,7 @@ package varausjarjestelma;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -13,7 +14,7 @@ public class Varaus {
     private int id;
     private LocalDateTime alkupvm;
     private LocalDateTime loppupvm;
-    private int asiakasId; //Integer
+    private int asiakasId;
     private int huonenro;
     private Asiakas asiakas;
     private Huone huone;
@@ -33,6 +34,13 @@ public class Varaus {
         this.alkupvm = LocalDateTime.parse(rs.getDate("alkupvm") + " " + "16:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.huonenro = rs.getInt("numero");
+    }
+    
+    public Varaus(ResultSet rs, boolean bool) throws SQLException{
+        this.asiakas = new Asiakas(rs.getString("nimi"), rs.getString("puhelinnro"), rs.getString("email"));
+        this.alkupvm = LocalDateTime.parse(rs.getDate("alkupvm") + " " + "16:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.huone = new Huone(rs.getInt("numero"), rs.getString("tyyppi"), rs.getInt("paivahinta"));
     }
 
     public int getId() {
@@ -73,6 +81,38 @@ public class Varaus {
 
     public void setHuonenro(int huonenro) {
         this.huonenro = huonenro;
+    }
+    
+    public int kestoPaivina() {
+        LocalDate ldAlkupvm = this.alkupvm.toLocalDate();
+        LocalDate ldLoppupvm = this.loppupvm.toLocalDate();
+        int kestoPaivina = 0;
+        
+        while(!ldAlkupvm.equals(ldLoppupvm)) {
+            ldAlkupvm = ldAlkupvm.plusDays(1);
+            kestoPaivina++;
+        }
+        
+        return kestoPaivina;
+    }
+    
+    public int huoneidenLkm() {
+        
+        return 1;
+    }
+    
+    public int yhteensa() {
+        int yhteensa = this.huone.getPaivahinta() * kestoPaivina();
+        return yhteensa;
+    }
+    
+    @Override
+    public String toString() {
+        return this.asiakas.getNimi() + ": " + this.asiakas.getPuhnro() + ", " + this.asiakas.getEmail() + "\n" +
+                this.alkupvm + " - " + this.loppupvm + ", Päiviä: " + kestoPaivina() + ", " + huoneidenLkm() + " Huone\n" +
+                "Huoneet:\n" +
+                "\t" + this.huone.getTyyppi() + ", " + this.huone.getNumero() + ", " + this.huone.getPaivahinta() + "\n" +
+                "Yhteensä: " + yhteensa() + " euroa.";
     }
     
 }
