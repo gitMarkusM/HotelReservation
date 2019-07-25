@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
  * @author MarkusM
@@ -18,6 +22,8 @@ public class Varaus {
     private int huonenro;
     private Asiakas asiakas;
     private Huone huone;
+    private Map<Integer, List<Huone>> huonevaraukset;
+//    private int varaustenLkm;
 
     public Varaus() {
     }
@@ -26,6 +32,7 @@ public class Varaus {
         this.alkupvm = alkupvm;
         this.loppupvm = loppupvm;
         this.asiakasId = asiakasId;
+        this.huonevaraukset = new HashMap<>();
     }
     
     public Varaus(ResultSet rs) throws SQLException{
@@ -35,7 +42,7 @@ public class Varaus {
         this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.huonenro = rs.getInt("numero");
     }
-    
+    // Muuta metodiksi 'lueVaraustiedot'
     public Varaus(ResultSet rs, boolean bool) throws SQLException{
         this.asiakas = new Asiakas(rs.getString("nimi"), rs.getString("puhelinnro"), rs.getString("email"));
         this.alkupvm = LocalDateTime.parse(rs.getDate("alkupvm") + " " + "16:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -76,11 +83,23 @@ public class Varaus {
     }
 
     public int getHuonenro() {
-        return huonenro;
+        return this.huonenro;
     }
 
     public void setHuonenro(int huonenro) {
         this.huonenro = huonenro;
+    }
+    
+    public Map<Integer, List<Huone>> luoHuonevaraus(int varausid, int varattavienLkm, List<Huone> vapaatHuoneet) {
+        this.huonevaraukset.put(varausid, new ArrayList<>());
+        
+        for (int i = 0; i < varattavienLkm; i++) {
+            if(this.huonevaraukset.containsKey(varausid)) {
+                this.huonevaraukset.get(varausid).add(vapaatHuoneet.get(i));
+            }
+        }
+        
+        return this.huonevaraukset;
     }
     
     public int kestoPaivina() {

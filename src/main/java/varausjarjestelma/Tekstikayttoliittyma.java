@@ -23,9 +23,6 @@ public class Tekstikayttoliittyma {
     AsiakasDao asiakasDao;
     
     @Autowired
-    HuoneVarausDao huoneVarausDao;
-    
-    @Autowired
     JdbcTemplate jdbcTemplate;
     
     public void kaynnista(Scanner lukija) throws SQLException, Exception {
@@ -141,10 +138,11 @@ public class Tekstikayttoliittyma {
                 }
             }
             // Varataan halvimmat huoneet varattavissa olevista.
-            List<Huone> varattavatHuoneet = new ArrayList<>();
-            for (int i = 0; i <= huoneidenLkm; i++) {
-                varattavatHuoneet.add(huoneDao.read(vapaatHuoneet.get(i).getNumero()));
-            }
+            ////tätä ei tarvita mappi systeemissä
+//            List<Huone> varattavatHuoneet = new ArrayList<>();
+//            for (int i = 0; i < huoneidenLkm; i++) {
+//                varattavatHuoneet.add(huoneDao.read(vapaatHuoneet.get(i).getNumero()));
+//            }
 
             // Varaajan tiedot
             System.out.println("Syötä varaajan nimi:");
@@ -156,14 +154,9 @@ public class Tekstikayttoliittyma {
             
             int asiakkaanId = asiakasDao.createAndReturnKey(new Asiakas(nimi,puhelinnro,email));
             
-            int varauksenId = varausDao.createAndReturnKey(new Varaus(alku, loppu, asiakkaanId));
-            // ööö...
-            List<Integer> nrot = new ArrayList<>();
-            varattavatHuoneet.forEach(huone -> {
-                nrot.add(huone.getNumero());
-            });
-            
-            huoneVarausDao.createFromList(new HuoneVaraus(nrot, varauksenId), huoneidenLkm);
+            Varaus varaus = new Varaus(alku, loppu, asiakkaanId);
+            int varauksenId = varausDao.createAndReturnKey(varaus);
+            varausDao.luoHuonevaraus(varaus.luoHuonevaraus(varauksenId, huoneidenLkm, vapaatHuoneet));
         }
     }
 
@@ -171,7 +164,7 @@ public class Tekstikayttoliittyma {
         System.out.println("Listataan varaukset");
         System.out.println("");
         
-        tulostaVaraustiedot(varausDao.listaaVaraustiedot());
+//        tulostaVaraustiedot(varausDao.listaaVaraustiedot());
     }
 
     private static void tilastoja(Scanner lukija) {
