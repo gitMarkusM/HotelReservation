@@ -124,15 +124,22 @@ public class VarausDao implements Dao<Varaus, Integer> {
         return huonevaraukset;
     }
     
-    public List<Varaus> listaaVaraustiedot() throws SQLException {
-        boolean b = false;
-        List<Varaus> varaustiedot = jdbcTemplate.query("SELECT "
-                + "Asiakas.nimi, Asiakas.puhelinnro, Asiakas.email, Varaus.alkupvm, "
-                + "Varaus.loppupvm FROM Varaus JOIN Asiakas ON Asiakas.id = Varaus.asiakasid", 
-                (rs, rowNum) -> new Varaus(rs, b));
-        
-        return varaustiedot;
+    public Asiakas readAsiakasByVarausid(Integer varausid) throws SQLException {
+        Asiakas asiakas = jdbcTemplate.queryForObject("SELECT nimi, puhelinnro, email FROM Asiakas "
+                + "JOIN Varaus ON Varaus.asiakasid = Asiakas.id "
+                + "WHERE Varaus.id = ?", (rs, rowNum) -> new Asiakas(rs), varausid);
+        return asiakas;
     }
+    
+//    public List<Varaus> listaaVaraustiedot() throws SQLException {
+//        boolean b = false;
+//        List<Varaus> varaustiedot = jdbcTemplate.query("SELECT "
+//                + "Asiakas.nimi, Asiakas.puhelinnro, Asiakas.email, Varaus.alkupvm, "
+//                + "Varaus.loppupvm FROM Varaus JOIN Asiakas ON Asiakas.id = Varaus.asiakasid", 
+//                (rs, rowNum) -> new Varaus(rs, b));
+//        
+//        return varaustiedot;
+//    }
      
     public Date LocalDateTimeToSqlDate(LocalDateTime ldt) {     
         LocalDate ld = ldt.toLocalDate();
