@@ -3,7 +3,6 @@ package varausjarjestelma;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,12 +136,6 @@ public class Tekstikayttoliittyma {
                     break;
                 }
             }
-            // Varataan halvimmat huoneet varattavissa olevista.
-            ////tätä ei tarvita mappi systeemissä
-//            List<Huone> varattavatHuoneet = new ArrayList<>();
-//            for (int i = 0; i < huoneidenLkm; i++) {
-//                varattavatHuoneet.add(huoneDao.read(vapaatHuoneet.get(i).getNumero()));
-//            }
 
             // Varaajan tiedot
             System.out.println("Syötä varaajan nimi:");
@@ -164,7 +157,7 @@ public class Tekstikayttoliittyma {
         System.out.println("Listataan varaukset");
         System.out.println("");
         
-//        tulostaVaraustiedot(varausDao.listaaVaraustiedot());
+        
     }
 
     private static void tilastoja(Scanner lukija) {
