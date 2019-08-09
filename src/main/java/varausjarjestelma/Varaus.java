@@ -42,12 +42,11 @@ public class Varaus {
         this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.huonenro = rs.getInt("numero");
     }
-    // Muuta metodiksi 'lueVaraustiedot'
-    public Varaus(ResultSet rs, boolean bool) throws SQLException{
+    
+    public Varaus(ResultSet rs, boolean b) throws SQLException{
         this.asiakas = new Asiakas(rs.getString("nimi"), rs.getString("puhelinnro"), rs.getString("email"));
         this.alkupvm = LocalDateTime.parse(rs.getDate("alkupvm") + " " + "16:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        this.huone = new Huone(rs.getInt("numero"), rs.getString("tyyppi"), rs.getInt("paivahinta"));
     }
 
     public int getId() {
@@ -88,6 +87,14 @@ public class Varaus {
 
     public void setHuonenro(int huonenro) {
         this.huonenro = huonenro;
+    }
+
+    public Map<Integer, List<Huone>> getHuonevaraukset() {
+        return huonevaraukset;
+    }
+
+    public void setHuonevaraukset(Map<Integer, List<Huone>> huonevaraukset) {
+        this.huonevaraukset = huonevaraukset;
     }
     
     public Map<Integer, List<Huone>> luoHuonevaraus(int varausid, int varattavienLkm, List<Huone> vapaatHuoneet) {

@@ -7,9 +7,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -91,7 +95,6 @@ public class VarausDao implements Dao<Varaus, Integer> {
         for (Iterator<Integer> it = huonevaraukset.keySet().iterator(); it.hasNext();) {
             key = it.next();
         }
-        
         List<Huone> huoneet = huonevaraukset.get(key);
         for (int i = 0; i < huoneet.size(); i++) {
             jdbcTemplate.update("INSERT INTO Huonevaraus(varausid, huonenumero) VALUES(?, ?)",
@@ -99,18 +102,37 @@ public class VarausDao implements Dao<Varaus, Integer> {
         }  
     }
     
-//    public List<Varaus> listaaVaraustiedot() throws SQLException {
-//        Boolean b = true;
-//        List<Varaus> varaustiedot = jdbcTemplate.query("SELECT "
-//                + "Asiakas.nimi, Asiakas.puhelinnro, Asiakas.email, Varaus.alkupvm, "
-//                + "Varaus.loppupvm, Huone.numero, Huone.tyyppi, Huone.paivahinta "
-//                + "FROM Varaus JOIN Asiakas ON Asiakas.id = Varaus.asiakasid JOIN "
-//                + "Huonevaraus ON Huonevaraus.varausid = Varaus.id JOIN Huone ON "
-//                + "Huone.numero = Huonevaraus.huonenumero", (rs, rowNum) -> 
-//                new Varaus(rs, b));
-//        
-//        return varaustiedot;
-//    }
+    public Map<Integer, List<Huone>> mapHuonevaraukset() {
+        Map<Integer, List<Huone>> huonevaraukset = new HashMap<>();
+        List<String> huonevarauksetList = jdbcTemplate.query("SELECT * FROM Huonevaraus",
+                (rs, rowNum) -> rs.getString("varausid") + " " + rs.getString("huonenumero"));
+        
+        huonevarauksetList.forEach(mj -> {
+            String palat[] = mj.split(" ");
+            int varausid = Integer.valueOf(palat[0]);
+            int huonenumero = Integer.valueOf(palat[1]);
+            Huone huone = new Huone();
+            try {
+                huone = huoneDao.read(huonenumero);
+            } catch (SQLException ex) {
+                Logger.getLogger(VarausDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            huonevaraukset.putIfAbsent(varausid, new ArrayList<>());
+            huonevaraukset.get(varausid).add(huone);
+        });
+        
+        return huonevaraukset;
+    }
+    
+    public List<Varaus> listaaVaraustiedot() throws SQLException {
+        boolean b = false;
+        List<Varaus> varaustiedot = jdbcTemplate.query("SELECT "
+                + "Asiakas.nimi, Asiakas.puhelinnro, Asiakas.email, Varaus.alkupvm, "
+                + "Varaus.loppupvm FROM Varaus JOIN Asiakas ON Asiakas.id = Varaus.asiakasid", 
+                (rs, rowNum) -> new Varaus(rs, b));
+        
+        return varaustiedot;
+    }
      
     public Date LocalDateTimeToSqlDate(LocalDateTime ldt) {     
         LocalDate ld = ldt.toLocalDate();
