@@ -38,7 +38,25 @@ public class VarausDao implements Dao<Varaus, Integer> {
     
     @Override
     public void create(Varaus varaus) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public Integer createAndReturnKey(Varaus varaus) throws SQLException {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         
+        jdbcTemplate.update(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(
+                    "INSERT INTO Varaus(alkupvm, loppupvm, asiakasid) VALUES(?,?,?)", 
+                    Statement.RETURN_GENERATED_KEYS);  
+            stmt.setDate(1, LocalDateTimeToSqlDate(varaus.getAlkupvm()));
+            stmt.setDate(2, LocalDateTimeToSqlDate(varaus.getLoppupvm()));
+            stmt.setInt(3, varaus.getAsiakasId());
+            return stmt;
+        }, keyHolder);
+        
+        int id = keyHolder.getKey().intValue();
+
+        return id;
     }
 
     @Override
@@ -70,24 +88,6 @@ public class VarausDao implements Dao<Varaus, Integer> {
                 + "JOIN Huone ON Huone.numero = Huonevaraus.huonenumero", (rs, rowNum) ->
                 new Varaus(rs));  
         return varaukset;
-    }
-    
-    public Integer createAndReturnKey(Varaus varaus) throws SQLException {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        
-        jdbcTemplate.update(connection -> {
-            PreparedStatement stmt = connection.prepareStatement(
-                    "INSERT INTO Varaus(alkupvm, loppupvm, asiakasid) VALUES(?,?,?)", 
-                    Statement.RETURN_GENERATED_KEYS);  
-            stmt.setDate(1, LocalDateTimeToSqlDate(varaus.getAlkupvm()));
-            stmt.setDate(2, LocalDateTimeToSqlDate(varaus.getLoppupvm()));
-            stmt.setInt(3, varaus.getAsiakasId());
-            return stmt;
-        }, keyHolder);
-        
-        int id = keyHolder.getKey().intValue();
-
-        return id;
     }
     
     public void luoHuonevaraus(Map<Integer, List<Huone>> huonevaraukset) throws SQLException {
@@ -130,16 +130,6 @@ public class VarausDao implements Dao<Varaus, Integer> {
                 + "WHERE Varaus.id = ?", (rs, rowNum) -> new Asiakas(rs), varausid);
         return asiakas;
     }
-    
-//    public List<Varaus> listaaVaraustiedot() throws SQLException {
-//        boolean b = false;
-//        List<Varaus> varaustiedot = jdbcTemplate.query("SELECT "
-//                + "Asiakas.nimi, Asiakas.puhelinnro, Asiakas.email, Varaus.alkupvm, "
-//                + "Varaus.loppupvm FROM Varaus JOIN Asiakas ON Asiakas.id = Varaus.asiakasid", 
-//                (rs, rowNum) -> new Varaus(rs, b));
-//        
-//        return varaustiedot;
-//    }
      
     public Date LocalDateTimeToSqlDate(LocalDateTime ldt) {     
         LocalDate ld = ldt.toLocalDate();

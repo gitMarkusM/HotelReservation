@@ -134,11 +134,8 @@ public class Varaus {
     
     @Override
     public String toString() {
-        return this.asiakas.getNimi() + ": " + this.asiakas.getPuhnro() + ", " + this.asiakas.getEmail() + "\n" +
-                this.alkupvm + " - " + this.loppupvm + ", Päiviä: " + kestoPaivina() + ", " + huoneidenLkm() + " Huone\n" +
-                "Huoneet:\n" +
-                "\t" + this.huone.getTyyppi() + ", " + this.huone.getNumero() + ", " + this.huone.getPaivahinta() + "\n" +
-                "Yhteensä: " + yhteensa() + " euroa.";
+        return this.alkupvm + " - " + this.loppupvm + ", Päiviä: " + kestoPaivina() + 
+                ", " + huoneidenLkm() + " Huone\n" + "Yhteensä: " + yhteensa() + " euroa.";
     }
     
 }

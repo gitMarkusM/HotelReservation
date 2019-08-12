@@ -102,8 +102,7 @@ public class HuoneDao implements Dao<Huone, Integer> {
                         vapaatHuoneet.add(huone);
                     } 
                 } catch (SQLException ex) {
-//                    Logger.getLogger(HuoneDao.class.getName()).log(Level.SEVERE, null, ex);
-                    System.out.println("Jotain meni vikaan.");
+                    Logger.getLogger(HuoneDao.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
             if(vapaatHuoneet.isEmpty()) {

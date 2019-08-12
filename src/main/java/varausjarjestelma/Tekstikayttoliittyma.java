@@ -5,7 +5,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -137,7 +140,6 @@ public class Tekstikayttoliittyma {
                     break;
                 }
             }
-            // Varataan halvimmat huoneet varattavissa olevista.
             ////tätä ei tarvita mappi systeemissä
 //            List<Huone> varattavatHuoneet = new ArrayList<>();
 //            for (int i = 0; i < huoneidenLkm; i++) {
@@ -164,7 +166,31 @@ public class Tekstikayttoliittyma {
         System.out.println("Listataan varaukset");
         System.out.println("");
         
-//        tulostaVaraustiedot(varausDao.listaaVaraustiedot());
+        Map<Integer, List<Huone>> huonevaraukset = varausDao.mapHuonevaraukset();
+        
+        huonevaraukset.keySet().stream().map((i) -> {
+            System.out.println("------------------------------------------------");
+            try {
+                System.out.println(varausDao.readAsiakasByVarausid(i));
+            } catch (SQLException ex) {
+                Logger.getLogger(Tekstikayttoliittyma.class.getName()).log(Level.SEVERE, null, ex);
+            }
+//            System.out.println(i);
+            return i;
+        }).map((i) -> huonevaraukset.get(i)).forEachOrdered((huoneet) -> {
+            huoneet.forEach(huone -> {
+                System.out.println(huone);
+            });
+        });
+        // Sama kuin yllä oleva funktionaalinen versio.
+//        for(Integer i: huonevaraukset.keySet()) {
+//            System.out.print(i);
+//            List<Huone> huoneet = huonevaraukset.get(i);
+//            huoneet.forEach(huone -> {
+//                System.out.println(huone);
+//            });
+//        }
+        System.out.println("");
     }
 
     private static void tilastoja(Scanner lukija) {
