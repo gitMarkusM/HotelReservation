@@ -41,8 +41,8 @@ public class Varaus {
         this.asiakasId = rs.getInt("asiakasid");
         this.alkupvm = LocalDateTime.parse(rs.getDate("alkupvm") + " " + "16:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-////        this.huonenro = rs.getInt("numero");
         this.huoneet = new ArrayList<>();
+        this.asiakas = new Asiakas();
     }
     
     public Varaus(ResultSet rs, boolean b) throws SQLException{
@@ -83,13 +83,13 @@ public class Varaus {
         this.asiakasId = asiakasId;
     }
 
-//    public int getHuonenro() {
-//        return this.huonenro;
-//    }
-//
-//    public void setHuonenro(int huonenro) {
-//        this.huonenro = huonenro;
-//    }
+    public List<Huone> getHuoneet() {
+        return huoneet;
+    }
+
+    public void setHuoneet(List<Huone> huoneet) {
+        this.huoneet = huoneet;
+    }
 
     public Map<Integer, List<Huone>> getHuonevaraukset() {
         return huonevaraukset;

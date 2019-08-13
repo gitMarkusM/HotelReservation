@@ -82,11 +82,18 @@ public class VarausDao implements Dao<Varaus, Integer> {
 
     @Override
     public List<Varaus> list() throws SQLException {
-        List<Varaus> varaukset = jdbcTemplate.query("SELECT id, asiakasid, "
-                + "alkupvm, loppupvm, numero FROM Varaus "
+        List<Varaus> varaukset = new ArrayList<>();
+                Varaus varaus = jdbcTemplate.queryForObject("SELECT id, asiakasid, "
+                + "alkupvm, loppupvm FROM Varaus "
                 + "JOIN Huonevaraus ON Huonevaraus.varausid = Varaus.id "
                 + "JOIN Huone ON Huone.numero = Huonevaraus.huonenumero", (rs, rowNum) ->
-                new Varaus(rs));  
+                new Varaus(rs));
+                
+        varaus.setHuoneet(huoneDao.listKyseisenVarauksenHuoneet(varaus.getId()));
+        varaukset.add(varaus);
+        
+        
+        
         return varaukset;
     }
     
