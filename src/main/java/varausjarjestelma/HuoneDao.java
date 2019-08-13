@@ -60,6 +60,16 @@ public class HuoneDao implements Dao<Huone, Integer> {
         return huoneet;
     }
     
+    public List<Huone> listKyseisenVarauksenHuoneet(int varausid) throws SQLException {
+        List<Huone> huoneet = jdbcTemplate.query("SELECT numero, tyyppi, paivahinta FROM Huone "
+                + "JOIN Huonevaraus ON Huonevaraus.huonenumero = Huone.numero "
+                + "JOIN Varaus ON Varaus.id = Huonevaraus.varausid "
+                + "WHERE varausid = ?", (rs, rowNum) -> new Huone(rs.getInt("numero"), 
+                        rs.getString("tyyppi"), rs.getInt("paivahinta")), varausid);
+        
+        return huoneet;
+    }
+    
     public List<Huone> haeHuoneita(LocalDateTime haluttuAlku, LocalDateTime haluttuLoppu, String haluttuTyyppi, String maxHinta) throws SQLException, Exception {
         List<Varaus> varaukset = varausDao.list();
         int varaustenLkm = varaukset.size();

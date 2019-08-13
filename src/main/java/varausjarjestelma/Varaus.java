@@ -19,10 +19,11 @@ public class Varaus {
     private LocalDateTime alkupvm;
     private LocalDateTime loppupvm;
     private int asiakasId;
-    private int huonenro;
+////    private int huonenro;
     private Asiakas asiakas;
-    private Huone huone;
+//    private Huone huone;
     private Map<Integer, List<Huone>> huonevaraukset;
+    private List<Huone> huoneet;
 //    private int varaustenLkm;
 
     public Varaus() {
@@ -40,7 +41,8 @@ public class Varaus {
         this.asiakasId = rs.getInt("asiakasid");
         this.alkupvm = LocalDateTime.parse(rs.getDate("alkupvm") + " " + "16:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        this.huonenro = rs.getInt("numero");
+////        this.huonenro = rs.getInt("numero");
+        this.huoneet = new ArrayList<>();
     }
     
     public Varaus(ResultSet rs, boolean b) throws SQLException{
@@ -81,13 +83,13 @@ public class Varaus {
         this.asiakasId = asiakasId;
     }
 
-    public int getHuonenro() {
-        return this.huonenro;
-    }
-
-    public void setHuonenro(int huonenro) {
-        this.huonenro = huonenro;
-    }
+//    public int getHuonenro() {
+//        return this.huonenro;
+//    }
+//
+//    public void setHuonenro(int huonenro) {
+//        this.huonenro = huonenro;
+//    }
 
     public Map<Integer, List<Huone>> getHuonevaraukset() {
         return huonevaraukset;
@@ -128,7 +130,7 @@ public class Varaus {
     }
     
     public int yhteensa() {
-        int yhteensa = this.huone.getPaivahinta() * kestoPaivina();
+        int yhteensa = 0/*this.huone.getPaivahinta() * kestoPaivina()*/;
         return yhteensa;
     }
     
