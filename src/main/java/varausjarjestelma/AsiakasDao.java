@@ -49,6 +49,13 @@ public class AsiakasDao implements Dao<Asiakas, Integer> {
                 + "WHERE id = ?", new BeanPropertyRowMapper<> (Asiakas.class), key);
         return asiakas;
     }
+    
+    public Asiakas readVarausidlla(int varausid) throws SQLException {
+        
+        
+        return null;
+    }
+    
     // Toimiiko tämä???
     @Override
     public Asiakas update(Asiakas asiakas) throws SQLException {
