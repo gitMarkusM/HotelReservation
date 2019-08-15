@@ -50,10 +50,12 @@ public class AsiakasDao implements Dao<Asiakas, Integer> {
         return asiakas;
     }
     
-    public Asiakas readVarausidlla(int varausid) throws SQLException {
+    public Asiakas readAsiakasVarausidlla(int varausid) throws SQLException {
+        Asiakas asiakas = jdbcTemplate.queryForObject("SELECT asiakas.id, nimi, puhelinnro, email FROM Asiakas"
+                + "JOIN Varaus ON Varaus.asiakasid = Asiakas.id"
+                + "WHERE Varaus.id = ?", (rs, rowNum) -> new Asiakas(rs), varausid);
         
-        
-        return null;
+        return asiakas;
     }
     
     // Toimiiko tämä???

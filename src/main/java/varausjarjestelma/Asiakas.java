@@ -23,6 +23,7 @@ public class Asiakas {
     }
     
     public Asiakas(ResultSet rs) throws SQLException {
+        this.id = rs.getInt("id");
         this.nimi = rs.getString("nimi");
         this.puhelinnro = rs.getString("puhelinnro");
         this.email = rs.getString("email");
