@@ -16,9 +16,9 @@ public class Asiakas {
     public Asiakas() {
     }
 
-    public Asiakas(String nimi, String puhnro, String email) {
+    public Asiakas(String nimi, String puhelinnro, String email) {
         this.nimi = nimi;
-        this.puhelinnro = puhnro;
+        this.puhelinnro = puhelinnro;
         this.email = email;
     }
     
@@ -45,11 +45,11 @@ public class Asiakas {
         this.nimi = nimi;
     }
 
-    public String getPuhnro() {
+    public String getPuhelinnro() {
         return puhelinnro;
     }
 
-    public void setPuhnro(String puhnro) {
+    public void setPuhelinnro(String puhnro) {
         this.puhelinnro = puhnro;
     }
 
@@ -63,6 +63,6 @@ public class Asiakas {
     
     @Override
     public String toString() {
-        return this.nimi + ": " + this.puhelinnro + ", " + this.email;
+        return "Asiakas: " + this.nimi + ", " + this.puhelinnro + ", " + this.email;
     }
 }

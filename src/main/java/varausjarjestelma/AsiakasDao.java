@@ -23,7 +23,7 @@ public class AsiakasDao implements Dao<Asiakas, Integer> {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public void create(Asiakas object) throws SQLException {
+    public void create(Asiakas asiakas) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
@@ -34,7 +34,7 @@ public class AsiakasDao implements Dao<Asiakas, Integer> {
                 PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO Asiakas(nimi, puhelinnro, email) VALUES(?,?,?)",Statement.RETURN_GENERATED_KEYS);
                 stmt.setString(1, asiakas.getNimi());
-                stmt.setString(2, asiakas.getPuhnro());
+                stmt.setString(2, asiakas.getPuhelinnro());
                 stmt.setString(3, asiakas.getEmail());
                 return stmt;
         }, keyHolder);
@@ -50,7 +50,7 @@ public class AsiakasDao implements Dao<Asiakas, Integer> {
         return asiakas;
     }
     
-    public Asiakas readAsiakasVarausidlla(int varausid) throws SQLException {
+    public Asiakas readAsiakasByVarausid(int varausid) throws SQLException {
         Asiakas asiakas = jdbcTemplate.queryForObject("SELECT asiakas.id, nimi, puhelinnro, email FROM Asiakas"
                 + "JOIN Varaus ON Varaus.asiakasid = Asiakas.id"
                 + "WHERE Varaus.id = ?", (rs, rowNum) -> new Asiakas(rs), varausid);
@@ -63,7 +63,7 @@ public class AsiakasDao implements Dao<Asiakas, Integer> {
     public Asiakas update(Asiakas asiakas) throws SQLException {
         jdbcTemplate.update("UPDATE Asiakas SET nimi = ?, puhelinnro = ?, email = ?"
                 + "WHERE id = ?",
-                asiakas.getNimi(), asiakas.getPuhnro(), asiakas.getEmail(), asiakas.getId());
+                asiakas.getNimi(), asiakas.getPuhelinnro(), asiakas.getEmail(), asiakas.getId());
         return asiakas;
     }
 

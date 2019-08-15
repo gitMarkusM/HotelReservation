@@ -19,12 +19,8 @@ public class Varaus {
     private LocalDateTime alkupvm;
     private LocalDateTime loppupvm;
     private int asiakasId;
-////    private int huonenro;
-    private Asiakas asiakas;
-//    private Huone huone;
     private Map<Integer, List<Huone>> huonevaraukset;
     private List<Huone> huoneet;
-//    private int varaustenLkm;
 
     public Varaus() {
     }
@@ -42,13 +38,6 @@ public class Varaus {
         this.alkupvm = LocalDateTime.parse(rs.getDate("alkupvm") + " " + "16:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.huoneet = new ArrayList<>();
-        this.asiakas = new Asiakas();
-    }
-    
-    public Varaus(ResultSet rs, boolean b) throws SQLException{
-        this.asiakas = new Asiakas(rs.getString("nimi"), rs.getString("puhelinnro"), rs.getString("email"));
-        this.alkupvm = LocalDateTime.parse(rs.getDate("alkupvm") + " " + "16:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        this.loppupvm = LocalDateTime.parse(rs.getDate("loppupvm") + " " + "10:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 
     public int getId() {
@@ -88,7 +77,7 @@ public class Varaus {
     }
 
     public void setHuoneet(List<Huone> huoneet) {
-        this.huoneet = huoneet;
+        this.huoneet = huoneet;  
     }
 
     public Map<Integer, List<Huone>> getHuonevaraukset() {
@@ -99,7 +88,7 @@ public class Varaus {
         this.huonevaraukset = huonevaraukset;
     }
     
-    public Map<Integer, List<Huone>> luoHuonevaraus(int varausid, int varattavienLkm, List<Huone> vapaatHuoneet) {
+    public Map<Integer, List<Huone>> lisaaHuonevaraus(int varausid, int varattavienLkm, List<Huone> vapaatHuoneet) {
         this.huonevaraukset.put(varausid, new ArrayList<>());
         
         for (int i = 0; i < varattavienLkm; i++) {
@@ -125,19 +114,23 @@ public class Varaus {
     }
     
     public int huoneidenLkm() {
-        
-        return 1;
+        return getHuoneet().size();
     }
     
-    public int yhteensa() {
-        int yhteensa = 0/*this.huone.getPaivahinta() * kestoPaivina()*/;
+    public int kokonaishinta() {
+        int paivahinnatYhteensa = 0;
+        for(Huone huone: getHuoneet()) {
+            paivahinnatYhteensa += huone.getPaivahinta();
+        }
+        int yhteensa = paivahinnatYhteensa * kestoPaivina();
         return yhteensa;
     }
     
     @Override
     public String toString() {
-        return this.alkupvm + " - " + this.loppupvm + ", Päiviä: " + kestoPaivina() + 
-                ", " + huoneidenLkm() + " Huone\n" + "Yhteensä: " + yhteensa() + " euroa.";
+        return "Varaus: " + this.alkupvm + " - " + this.loppupvm + ", Päiviä: " + 
+                kestoPaivina() + ", " + huoneidenLkm() + " Huonetta\n" + 
+                "Kokonaishinta: " + kokonaishinta() + " euroa.\n";
     }
     
 }

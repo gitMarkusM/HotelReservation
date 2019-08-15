@@ -3,9 +3,7 @@ package varausjarjestelma;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,7 +59,7 @@ public class Tekstikayttoliittyma {
     }
 
     private void lisaaHuone(Scanner s) throws SQLException {
-        System.out.println("Lisätään huone");
+        System.out.println("Lisätään huone.");
         System.out.println("");
 
         System.out.println("Minkä tyyppinen huone on?");
@@ -76,7 +74,7 @@ public class Tekstikayttoliittyma {
     }
 
     private void listaaHuoneet() throws SQLException {
-        System.out.println("Listataan huoneet");
+        System.out.println("Listataan huoneet...");
         System.out.println("");
         
         List<Huone> huoneet = huoneDao.list();
@@ -106,7 +104,7 @@ public class Tekstikayttoliittyma {
     }
 
     private void lisaaVaraus(Scanner s) throws SQLException, Exception {
-        System.out.println("Haetaan huoneita");
+        System.out.println("Haetaan huoneita.");
         System.out.println("");
         
         System.out.println("Milloin varaus alkaisi (yyyy-MM-dd)?");
@@ -122,6 +120,7 @@ public class Tekstikayttoliittyma {
         
         // Mitä ilman et tule toimeen -kyselyt tulisi tähän kohtaan.
         
+        // Näytetään vapaat huoneet ja kysytään varattavien lukumäärä.
         List<Huone> vapaatHuoneet = huoneDao.haeHuoneita(alku, loppu, haluttuTyyppi, maksimihinta);
         System.out.println("Vapaat huoneet:");
         System.out.println("****************************************");
@@ -140,13 +139,8 @@ public class Tekstikayttoliittyma {
                     break;
                 }
             }
-            ////tätä ei tarvita mappi systeemissä
-//            List<Huone> varattavatHuoneet = new ArrayList<>();
-//            for (int i = 0; i < huoneidenLkm; i++) {
-//                varattavatHuoneet.add(huoneDao.read(vapaatHuoneet.get(i).getNumero()));
-//            }
 
-            // Varaajan tiedot
+            // Asiakkaan tiedot
             System.out.println("Syötä varaajan nimi:");
             String nimi = s.nextLine();
             System.out.println("Syötä varaajan puhelinnumero:");
@@ -154,43 +148,27 @@ public class Tekstikayttoliittyma {
             System.out.println("Syötä varaajan sähköpostiosoite:");
             String email = s.nextLine();
             
-            int asiakkaanId = asiakasDao.createAndReturnKey(new Asiakas(nimi,puhelinnro,email));
+            int asiakasID = asiakasDao.createAndReturnKey(new Asiakas(nimi,puhelinnro,email));
+
+            Varaus varaus = new Varaus(alku, loppu, asiakasID);
+            int varauksenID = varausDao.createAndReturnKey(varaus);
             
-            Varaus varaus = new Varaus(alku, loppu, asiakkaanId);
-            int varauksenId = varausDao.createAndReturnKey(varaus);
-            varausDao.luoHuonevaraus(varaus.luoHuonevaraus(varauksenId, huoneidenLkm, vapaatHuoneet));
+            varausDao.luoHuonevaraus(varaus.lisaaHuonevaraus(varauksenID, huoneidenLkm, vapaatHuoneet));
         }
     }
 
     private void listaaVaraukset() throws SQLException{
-        System.out.println("Listataan varaukset");
-        System.out.println("");
+        List<Varaus> varaukset = varausDao.list();
         
-        Map<Integer, List<Huone>> huonevaraukset = varausDao.mapHuonevaraukset();
-        
-        huonevaraukset.keySet().stream().map((i) -> {
-            System.out.println("------------------------------------------------");
+        varaukset.forEach(varaus -> {
             try {
-                System.out.println(varausDao.readAsiakasByVarausid(i));
+                System.out.println(asiakasDao.read(varaus.getAsiakasId()));
             } catch (SQLException ex) {
                 Logger.getLogger(Tekstikayttoliittyma.class.getName()).log(Level.SEVERE, null, ex);
             }
-//            System.out.println(i);
-            return i;
-        }).map((i) -> huonevaraukset.get(i)).forEachOrdered((huoneet) -> {
-            huoneet.forEach(huone -> {
-                System.out.println(huone);
-            });
+            System.out.println(varaus);
         });
-        // Sama kuin yllä oleva funktionaalinen versio.
-//        for(Integer i: huonevaraukset.keySet()) {
-//            System.out.print(i);
-//            List<Huone> huoneet = huonevaraukset.get(i);
-//            huoneet.forEach(huone -> {
-//                System.out.println(huone);
-//            });
-//        }
-        System.out.println("");
+
     }
 
     private static void tilastoja(Scanner lukija) {
