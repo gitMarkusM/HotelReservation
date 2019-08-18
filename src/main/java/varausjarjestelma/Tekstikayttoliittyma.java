@@ -176,41 +176,26 @@ public class Tekstikayttoliittyma {
         System.out.println("");
 
         // tilastoja pyydettäessä käyttäjältä kysytään tilasto
-        System.out.println(" 1 - Suosituimmat lisävarusteet");
-        System.out.println(" 2 - Parhaat asiakkaat");
-        System.out.println(" 3 - Varausprosentti huoneittain");
-        System.out.println(" 4 - Varausprosentti huonetyypeittäin");
+        System.out.println(" 1 - Parhaat asiakkaat");
+        System.out.println(" 2 - Varausprosentti huoneittain");
+        System.out.println(" 3 - Varausprosentti huonetyypeittäin");
 
         System.out.println("Syötä komento: ");
         int komento = Integer.valueOf(lukija.nextLine());
 
         switch (komento) {
             case 1:
-                suosituimmatLisavarusteet();
-                break;
-            case 2:
                 parhaatAsiakkaat();
                 break;
-            case 3:
+            case 2:
                 varausprosenttiHuoneittain(lukija);
                 break;
-            case 4:
+            case 3:
                 varausprosenttiHuonetyypeittain(lukija);
                 break;
             default:
                 break;
         }
-    }
-
-    private static void suosituimmatLisavarusteet() {
-        System.out.println("Tulostetaan suosituimmat lisävarusteet");
-        System.out.println("");
-
-        // alla oletetaan, että lisävarusteita on vain muutama
-        // mikäli tietokannassa niitä on enemmän, tulostetaan 10 suosituinta
-        System.out.println("Teekannu, 2 varausta");
-        System.out.println("Kahvinkeitin, 2 varausta");
-        System.out.println("Silitysrauta, 1 varaus");
     }
 
     private static void parhaatAsiakkaat() {
@@ -262,12 +247,12 @@ public class Tekstikayttoliittyma {
         });
     }
     
-    public static void tulostaVaraustiedot(List<Varaus> varaustiedot) {
-        System.out.println("******************************************************");
-        varaustiedot.forEach(varaustieto -> {
-            System.out.println(varaustieto);
-            System.out.println("******************************************************");
-        });
-    }
+//    public static void tulostaVaraustiedot(List<Varaus> varaustiedot) {
+//        System.out.println("******************************************************");
+//        varaustiedot.forEach(varaustieto -> {
+//            System.out.println(varaustieto);
+//            System.out.println("******************************************************");
+//        });
+//    }
     
 }
