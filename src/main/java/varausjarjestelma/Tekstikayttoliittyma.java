@@ -148,9 +148,25 @@ public class Tekstikayttoliittyma {
             System.out.println("Syötä varaajan sähköpostiosoite:");
             String email = s.nextLine();
             
-            int asiakasID = asiakasDao.createAndReturnKey(new Asiakas(nimi,puhelinnro,email));
-
-            Varaus varaus = new Varaus(alku, loppu, asiakasID);
+            List<Asiakas> asiakkaat = asiakasDao.list();
+            int loydettyID = 0;
+            for(Asiakas asiakas: asiakkaat) {
+                if(asiakas.getNimi().equalsIgnoreCase(nimi)) {
+                    loydettyID = asiakas.getId();
+                }
+            } 
+            Varaus varaus = new Varaus();
+            if(loydettyID == 0) {
+                int asiakasID = asiakasDao.createAndReturnKey(new Asiakas(nimi,puhelinnro,email));
+                varaus.setAlkupvm(alku);
+                varaus.setLoppupvm(loppu);
+                varaus.setAsiakasId(asiakasID);
+            } else if(loydettyID > 0) {
+                varaus.setAlkupvm(alku);
+                varaus.setLoppupvm(loppu);
+                varaus.setAsiakasId(loydettyID);
+            }
+            
             int varauksenID = varausDao.createAndReturnKey(varaus);
             
             varausDao.luoHuonevaraus(varaus.lisaaHuonevaraus(varauksenID, huoneidenLkm, vapaatHuoneet));
@@ -202,10 +218,10 @@ public class Tekstikayttoliittyma {
         System.out.println("Tulostetaan parhaat asiakkaat");
         System.out.println("");
 
-        // alla oletetaan, että asiakkaita on vain 2
-        // mikäli tietokannassa niitä on enemmän, tulostetaan asiakkaita korkeintaan 10
-        System.out.println("Anssi Asiakas, anssi@asiakas.net, +358441231234, 1323 euroa");
-        System.out.println("Essi Esimerkki, essi@esimerkki.net, +358443214321, 229 euroa");
+        
+        
+//        System.out.println("Anssi Asiakas, anssi@asiakas.net, +358441231234, 1323 euroa");
+//        System.out.println("Essi Esimerkki, essi@esimerkki.net, +358443214321, 229 euroa");
     }
 
     private static void varausprosenttiHuoneittain(Scanner lukija) {
