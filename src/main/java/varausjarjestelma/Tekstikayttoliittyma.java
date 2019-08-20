@@ -120,7 +120,7 @@ public class Tekstikayttoliittyma {
         
         // Mitä ilman et tule toimeen -kyselyt tulisi tähän kohtaan.
         
-        // Näytetään vapaat huoneet ja kysytään varattavien lukumäärä.
+        // Näytetään vapaat huoneet ja kysytään varattavien lukumäärä. Varataan halvimmat.
         List<Huone> vapaatHuoneet = huoneDao.haeHuoneita(alku, loppu, haluttuTyyppi, maksimihinta);
         System.out.println("Vapaat huoneet:");
         System.out.println("****************************************");
@@ -140,13 +140,9 @@ public class Tekstikayttoliittyma {
                 }
             }
 
-            // Asiakkaan tiedot
+            // Asiakkaan tiedot. Jos on jo, ei tehdä uutta samannimistä.
             System.out.println("Syötä varaajan nimi:");
             String nimi = s.nextLine();
-            System.out.println("Syötä varaajan puhelinnumero:");
-            String puhelinnro = s.nextLine();
-            System.out.println("Syötä varaajan sähköpostiosoite:");
-            String email = s.nextLine();
             
             List<Asiakas> asiakkaat = asiakasDao.list();
             int loydettyID = 0;
@@ -155,15 +151,16 @@ public class Tekstikayttoliittyma {
                     loydettyID = asiakas.getId();
                 }
             } 
-            Varaus varaus = new Varaus();
+            
+            Varaus varaus = new Varaus(alku, loppu, 0);
             if(loydettyID == 0) {
+                System.out.println("Syötä varaajan puhelinnumero:");
+                String puhelinnro = s.nextLine();
+                System.out.println("Syötä varaajan sähköpostiosoite:");
+                String email = s.nextLine();
                 int asiakasID = asiakasDao.createAndReturnKey(new Asiakas(nimi,puhelinnro,email));
-                varaus.setAlkupvm(alku);
-                varaus.setLoppupvm(loppu);
                 varaus.setAsiakasId(asiakasID);
             } else if(loydettyID > 0) {
-                varaus.setAlkupvm(alku);
-                varaus.setLoppupvm(loppu);
                 varaus.setAsiakasId(loydettyID);
             }
             

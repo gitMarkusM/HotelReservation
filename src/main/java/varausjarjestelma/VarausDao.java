@@ -89,6 +89,17 @@ public class VarausDao implements Dao<Varaus, Integer> {
         return varaukset;
     }
     
+    public List<Varaus> listVarauksetByAsiakasID(Integer asiakasID) throws SQLException {
+        List<Varaus> varaukset = jdbcTemplate.query("SELECT id, asiakasid, alkupvm, "
+                + "loppupvm FROM Varaus WHERE asiakasid = ?", (rs, rowNum) -> 
+                        new Varaus(rs), asiakasID);
+        for(Varaus varaus: varaukset) {
+            varaus.setHuoneet(huoneDao.huoneetToListByVarausid(varaus.getId()));
+        }
+        
+        return varaukset;
+    }
+    
     public void luoHuonevaraus(Map<Integer, List<Huone>> huonevaraukset) throws SQLException {
         Integer key = 0;
         for (Iterator<Integer> it = huonevaraukset.keySet().iterator(); it.hasNext();) {
